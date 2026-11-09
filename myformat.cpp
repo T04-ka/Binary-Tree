@@ -2,6 +2,7 @@
 #define MYMACRO_H
 
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef const char* str_t;
 
@@ -16,7 +17,6 @@ typedef const char* str_t;
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
-
 
 #ifdef DEBUG
 #define $                   fprintf(stderr, RED "ZZZ FROM %s:%d\n" DEF, __FILE__, __LINE__);
@@ -46,6 +46,17 @@ typedef const char* str_t;
                             }                                                                                                               \
                             fprintf(stderr, "\b\b]\n");
 
+#define ASSERT(EXPR)                                                                                \
+    if (EXPR)  {                                                                                    \
+                                                                                                    \
+        void(0);                                                                                    \
+    }                                                                                               \
+    else {                                                                                          \
+                                                                                                    \
+        $err("Assertion %s failed in %s:%d: %s.\n", #EXPR, __FILE__, __LINE__, __PRETTY_FUNCTION__);\
+        abort();                                                                                    \
+    }
+
 #else
 #define $
 #define $d(VR)
@@ -63,6 +74,7 @@ typedef const char* str_t;
 #define $en
 #define $ad(ARR, N)
 #define $ac(ARR, N)
+#define ASSERT(EXPR)
 
 #endif
 

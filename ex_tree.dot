@@ -1,0 +1,40 @@
+digraph G {
+    rankdir=TB;
+    nodesep=0.4;
+    ranksep=0.4;
+    splines=true;
+
+    node [shape=circle, style=filled, fillcolor="#F4F4F4", width=0.5, fixedsize=true, fontname="Arial"];
+
+    subgraph levels {
+        node [shape=plaintext, width=0.8, style=filled, fillcolor=none, fontname="Arial", fontcolor="#777777"];
+
+        // Вертикальный каркас для левой колонки
+        L_0 [label="0"];
+        L_1 [label="1"];
+        L_2 [label="2"];
+        L_3 [label="3"];
+
+        L_0 -> L_1 -> L_2 -> L_3 [style=invis];
+    }
+
+    Root [fillcolor="cyan"];
+
+    Root -> A1;
+    Root -> A2;
+
+    A1 -> B1;
+    A1 -> B2;
+    A2 -> B3;
+    A2 -> B4;
+
+    B1 -> C1; B1 -> C2;
+    B2 -> C3; B2 -> C4;
+    B3 -> C5; B3 -> C6;
+    B4 -> C7; B4 -> C8;
+
+    { rank=same; L_0; Root; }
+    { rank=same; L_1; A1; A2; }
+    { rank=same; L_2; B1; B2; B3; B4; }
+    { rank=same; L_3; C1; C2; C3; C4; C5; C6; C7; C8; }
+}
