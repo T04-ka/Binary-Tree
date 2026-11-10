@@ -13,10 +13,12 @@ typedef const char* str_t;
 #define FAT     "\e[1m"
 #define DEF     "\e[0m"
 #define BLACK   "\033[30m"
+#define VIOLET  "\e[0;35m"
 
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+
 
 #ifdef DEBUG
 #define $                   fprintf(stderr, RED "ZZZ FROM %s:%d\n" DEF, __FILE__, __LINE__);
@@ -47,7 +49,7 @@ typedef const char* str_t;
                             fprintf(stderr, "\b\b]\n");
 
 #define ASSERT(EXPR)                                                                                \
-    if (EXPR)  {                                                                                    \
+    if (EXPR)   {                                                                                   \
                                                                                                     \
         void(0);                                                                                    \
     }                                                                                               \
@@ -56,6 +58,18 @@ typedef const char* str_t;
         $err("Assertion %s failed in %s:%d: %s.\n", #EXPR, __FILE__, __LINE__, __PRETTY_FUNCTION__);\
         abort();                                                                                    \
     }
+
+
+#define WARNING(EXPR)                                                                                                       \
+   if (EXPR)    {                                                                                                           \
+                                                                                                                            \
+        void(0);                                                                                                            \
+   }                                                                                                                        \
+   else {                                                                                                                   \
+                                                                                                                            \
+       $err(VIOLET "Warning: %s is definitely false in %s:%d: %s.\n" DEF, #EXPR, __FILE__, __LINE__, __PRETTY_FUNCTION__);  \
+   }
+
 
 #else
 #define $
@@ -75,6 +89,7 @@ typedef const char* str_t;
 #define $ad(ARR, N)
 #define $ac(ARR, N)
 #define ASSERT(EXPR)
+#define WARNING(EXPR)
 
 #endif
 
