@@ -56,6 +56,7 @@ typedef const char* str_t;
     else {                                                                                          \
                                                                                                     \
         $err("Assertion %s failed in %s:%d: %s.\n", #EXPR, __FILE__, __LINE__, __PRETTY_FUNCTION__);\
+        $err("Previous call was in %s:%d: %s.\n", __PREV_FILE, __PREV_LINE, __PREV_FUNC);                 \
         abort();                                                                                    \
     }
 
@@ -67,8 +68,12 @@ typedef const char* str_t;
    }                                                                                                                        \
    else {                                                                                                                   \
                                                                                                                             \
-       $err(VIOLET "Warning: %s is definitely false in %s:%d: %s.\n" DEF, #EXPR, __FILE__, __LINE__, __PRETTY_FUNCTION__);  \
+       $err(VIOLET "Warning: \"%s\" is definitely false in %s:%d: %s.\n" DEF, #EXPR, __FILE__, __LINE__, __PRETTY_FUNCTION__);  \
+       $err(VIOLET "Previous call was in %s:%d: %s.\n" DEF, __PREV_FILE, __PREV_LINE, __PREV_FUNC);                 \
    }
+
+
+#define ONDEBUG(...) __VA_ARGS__
 
 
 #else
@@ -90,8 +95,11 @@ typedef const char* str_t;
 #define $ac(ARR, N)
 #define ASSERT(EXPR)
 #define WARNING(EXPR)
+#define ONDEBUG(...)
 
 #endif
 
+#define PASS_PREV_DATA ONDEBUG(, const char* __PREV_FILE, int __PREV_LINE, const char* __PREV_FUNC)
+#define PASS_CURRENT_LOCATION ONDEBUG(, __FILE__, __LINE__, __PRETTY_FUNCTION__)
 
 #endif

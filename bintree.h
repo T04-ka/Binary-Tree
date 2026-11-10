@@ -1,6 +1,10 @@
 #ifndef BINTREE_H
 #define BINTREE_H
 
+#define DEBUG
+
+#include "myformat.cpp"
+
 //---------------------------------------------------------------------------------------------------------------------------------
 
 #ifndef tree_node_elem_t
@@ -27,25 +31,44 @@ enum tree_node_side_t
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
+#define MAX_FILENAME_LEN 100
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
 tree_node_t* tree_node_create(tree_node_elem_t value);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_node_destroy(tree_node_t* tree_node_ptr);
+void tree_node_destroy(tree_node_t* tree_node_ptr ONDEBUG(, const char*, int, const char*));
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_node_link(tree_node_t* parent_node_ptr, tree_node_t* daughter_node_ptr, tree_node_side_t side);
+void tree_node_link(tree_node_t* parent_node_ptr, tree_node_t* daughter_node_ptr, tree_node_side_t side ONDEBUG(, const char*, int, const char*));
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_node_detach(tree_node_t* node_to_detach_ptr);
+void tree_node_detach(tree_node_t* node_to_detach_ptr ONDEBUG(, const char*, int, const char*));
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_node_value_change(tree_node_t* tree_node_ptr, tree_node_elem_t new_value);
+void tree_node_value_change(tree_node_t* tree_node_ptr, tree_node_elem_t new_value ONDEBUG(, const char*, int, const char*));
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_node_t
+unsigned tree_depth_search(tree_node_t* tree_node_ptr, unsigned current_rank PASS_PREV_DATA);
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file PASS_PREV_DATA);
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+void tree_dump_dot_file_generate(tree_node_t* tree_root_ptr, const char* dot_file_name PASS_PREV_DATA);
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+void tree_dump_in_png(tree_node_t* tree_root_ptr, const char* png_name PASS_PREV_DATA);
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
 #endif
