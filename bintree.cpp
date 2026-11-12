@@ -116,7 +116,7 @@ unsigned tree_depth_search(tree_node_t* tree_node_ptr, unsigned current_rank PAS
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file PASS_PREV_DATA) {
+void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file, const char* png_name PASS_PREV_DATA) {
 
     ASSERT(tree_root_ptr != NULL);
     WARNING(tree_root_ptr->parent == NULL);
@@ -130,7 +130,7 @@ void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file PASS_PREV_DAT
     fprintf(html_file, "<body>\n");
     fprintf(html_file, "    <p style=\"font-family: monospace;\">\n        ");
 
-    tree_dump_in_png(tree_root_ptr, "dump4html.png" PASS_CURRENT_LOCATION);
+    tree_dump_in_png(tree_root_ptr, png_name PASS_CURRENT_LOCATION);
 
     fprintf(html_file, " DED_LOH\n");
     fprintf(html_file, "    < -- Image insert -- >\n");
@@ -163,7 +163,7 @@ void tree_dump_dot_file_generate(tree_node_t* tree_root_ptr, const char* dot_fil
 
     FILE* dot_file = fopen(dot_file_name, "w");
 
-    WRITE_DOT("digraph G {\n\trankdir=TB\n\tnodesep=0.4\n\tranksep=0.4;\n\tsplines=true;\n\n\tnode [shape=circle, style=filled, fillcolor=\"#F4F4F4\", width=0.5, fixedsize=true, fontname=\"Arial\"];\
+    WRITE_DOT("digraph G {\n\trankdir=TB\n\tnodesep=0.4\n\tranksep=0.4;\n\tsplines=true;\n\n\tnode [shape=record, style=filled, fillcolor=\"#F4F4F4\", width=3.1, height=1.2, fixedsize=true, fontname=\"Arial\"];\
         \n\n\tsubgraph levels {\n\t\tnode [shape=plaintext, width=0.8, style=filled, fillcolor=none, fontname=\"Arial\", fontcolor=\"#777777\"];\n\n");
 
     for (unsigned i = 0; i <= depth; i++) {
@@ -197,7 +197,9 @@ void tree_nodes_dot_init_recursively(FILE* dot_file, tree_node_t* tree_node_ptr,
     ASSERT(tree_node_ptr != NULL);
 
 // TODO ВОТ ЗДЕСЬ                 v ПОПРОБОВАТЬ СДЕЛАТЬ ВСТАВКУ МАКРОСОМ, КОТОРЫЙ В ЗАВИСИМОСИ ОТ ТАЙПДЕФА РАСКРЫВАЕТСЯ В d p lg и тд
-    WRITE_DOT("\tnode_%p[label=\"%d\"];\n", tree_node_ptr, tree_node_ptr->value);
+    WRITE_DOT("\tnode_%p[label=<{ {%p} | {<b>%d</b>} | {%p} | { %p | %p} }>];\n", tree_node_ptr, \
+             tree_node_ptr->parent, tree_node_ptr->value, tree_node_ptr, tree_node_ptr->left, tree_node_ptr->right);
+
     WRITE_DOT("\t{ rank=same; node_%p; L_%u };\n\n", tree_node_ptr, rank);
 
     if (tree_node_ptr->left != NULL) {

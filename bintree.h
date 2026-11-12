@@ -39,19 +39,19 @@ tree_node_t* tree_node_create(tree_node_elem_t value);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_node_destroy(tree_node_t* tree_node_ptr, bool do_recursively ONDEBUG(, const char*, int, const char*));
+void tree_node_destroy(tree_node_t* tree_node_ptr, bool do_recursively PASS_PREV_DATA);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_node_link(tree_node_t* parent_node_ptr, tree_node_t* daughter_node_ptr, tree_node_side_t side ONDEBUG(, const char*, int, const char*));
+void tree_node_link(tree_node_t* parent_node_ptr, tree_node_t* daughter_node_ptr, tree_node_side_t side PASS_PREV_DATA);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_node_detach(tree_node_t* node_to_detach_ptr ONDEBUG(, const char*, int, const char*));
+void tree_node_detach(tree_node_t* node_to_detach_ptr PASS_PREV_DATA);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_node_value_change(tree_node_t* tree_node_ptr, tree_node_elem_t new_value ONDEBUG(, const char*, int, const char*));
+void tree_node_value_change(tree_node_t* tree_node_ptr, tree_node_elem_t new_value PASS_PREV_DATA);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 

@@ -4,26 +4,43 @@ digraph G {
 	ranksep=0.4;
 	splines=true;
 
-	node [shape=circle, style=filled, fillcolor="#F4F4F4", width=0.5, fixedsize=true, fontname="Arial"];        
+	node [shape=record, style=filled, fillcolor="#F4F4F4", width=3.1, height=1.2, fixedsize=true, fontname="Arial"];        
 
 	subgraph levels {
 		node [shape=plaintext, width=0.8, style=filled, fillcolor=none, fontname="Arial", fontcolor="#777777"];
 
 		L_0 [label="0"];
 		L_1 [label="1"];
+		L_2 [label="2"];
 
-		L_0 -> L_1 [style=invis];
+		L_0 -> L_1 -> L_2 [style=invis];
 	}
 
-	node_0x71809bbe0040[label="50"];
-	{ rank=same; node_0x71809bbe0040; L_0 };
+	node_0x6c796c7e0040[label=<{ {(nil)} | {<b>50</b>} | {0x6c796c7e0040} | { 0x6c796c7e0070 | 0x6c796c7e00a0} }>];
+	{ rank=same; node_0x6c796c7e0040; L_0 };
 
-	node_0x71809bbe0070[label="100"];
-	{ rank=same; node_0x71809bbe0070; L_1 };
+	node_0x6c796c7e0070[label=<{ {0x6c796c7e0040} | {<b>100</b>} | {0x6c796c7e0070} | { 0x6c796c7e0100 | 0x6c796c7e00d0} }>];
+	{ rank=same; node_0x6c796c7e0070; L_1 };
 
-	node_0x71809bbe00a0[label="25"];
-	{ rank=same; node_0x71809bbe00a0; L_1 };
+	node_0x6c796c7e0100[label=<{ {0x6c796c7e0070} | {<b>40</b>} | {0x6c796c7e0100} | { (nil) | (nil)} }>];
+	{ rank=same; node_0x6c796c7e0100; L_2 };
 
-	node_0x71809bbe0040 -> node_0x71809bbe0070;
-	node_0x71809bbe0040 -> node_0x71809bbe00a0;
+	node_0x6c796c7e00d0[label=<{ {0x6c796c7e0070} | {<b>60</b>} | {0x6c796c7e00d0} | { (nil) | (nil)} }>];
+	{ rank=same; node_0x6c796c7e00d0; L_2 };
+
+	node_0x6c796c7e00a0[label=<{ {0x6c796c7e0040} | {<b>25</b>} | {0x6c796c7e00a0} | { 0x6c796c7e0130 | 0x6c796c7e0160} }>];
+	{ rank=same; node_0x6c796c7e00a0; L_1 };
+
+	node_0x6c796c7e0130[label=<{ {0x6c796c7e00a0} | {<b>60</b>} | {0x6c796c7e0130} | { (nil) | (nil)} }>];
+	{ rank=same; node_0x6c796c7e0130; L_2 };
+
+	node_0x6c796c7e0160[label=<{ {0x6c796c7e00a0} | {<b>60</b>} | {0x6c796c7e0160} | { (nil) | (nil)} }>];
+	{ rank=same; node_0x6c796c7e0160; L_2 };
+
+	node_0x6c796c7e0040 -> node_0x6c796c7e0070;
+	node_0x6c796c7e0070 -> node_0x6c796c7e0100;
+	node_0x6c796c7e0070 -> node_0x6c796c7e00d0;
+	node_0x6c796c7e0040 -> node_0x6c796c7e00a0;
+	node_0x6c796c7e00a0 -> node_0x6c796c7e0130;
+	node_0x6c796c7e00a0 -> node_0x6c796c7e0160;
 }

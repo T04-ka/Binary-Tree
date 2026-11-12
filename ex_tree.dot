@@ -4,9 +4,10 @@ digraph G {
     ranksep=0.4;
     splines=true;
 
-    node [shape=circle, style=filled, fillcolor="#F4F4F4", width=0.5, fixedsize=true, fontname="Arial"];
+    node [shape=record, style=filled, fillcolor="#F4F4F4", width=3, height=1.2, fixedsize=true, fontname="Arial"];
 
     subgraph levels {
+
         node [shape=plaintext, width=0.8, style=filled, fillcolor=none, fontname="Arial", fontcolor="#777777"];
 
         // Вертикальный каркас для левой колонки
@@ -17,19 +18,19 @@ digraph G {
         L_0 -> L_1 -> L_2 [style=invis];
     }
 
-    node_0x1488 [label="3"];
+    node_0x1488 [label=<{ {NULL} | {<b>3</b>} | {0x1488} | { 0x1111 | 0x6769} }>];
     { rank=same; node_0x1488; L_0 };
 
-    node_0x1111[label="4"];
+    node_0x1111[label=<{ {0x1488} | {<b>4</b>} | {0x1111} | { NULL | NULL} }>];
     { rank=same; node_0x1111; L_1 };
 
-    node_0x6769[label="5"];
+    node_0x6769[label=<{ {0x1488} | {<b>5</b>} | {0x6769} | { 0x2280 | 0x5242} }>];
     { rank=same; node_0x6769; L_1 };
 
-    node_0x2280[label="6"];
+    node_0x2280[label=<{ {0x6769} | {<b>6</b>} | {0x2280} | { NULL | NULL} }>];
     { rank=same; node_0x2280; L_2 };
 
-    node_0x5242[label="7"];
+    node_0x5242[label=<{ {0x6769} | {<b>7</b>} | {0x5242} | { NULL | NULL} }>];
     { rank=same; node_0x5242; L_2 };
 
 
