@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
 
 typedef const char* str_t;
 
@@ -101,5 +103,8 @@ typedef const char* str_t;
 
 #define PASS_PREV_DATA ONDEBUG(, const char* __PREV_FILE, int __PREV_LINE, const char* __PREV_FUNC)
 #define PASS_CURRENT_LOCATION ONDEBUG(, __FILE__, __LINE__, __PRETTY_FUNCTION__)
+
+
+//---------------------------------------------------------------------------------------------------------------------------------
 
 #endif

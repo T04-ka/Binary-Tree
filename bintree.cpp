@@ -1,9 +1,17 @@
-#include <stdlib.h>
-#include <string.h>
 
 #include "bintree.h"
-#include "myformat.cpp"
 
+//---------------------------------------------------------------------------------------------------------------------------------
+
+long long read_file_size(FILE* file);
+
+long long read_file_size(FILE* file){
+
+    struct stat statdata = {};
+    int err = fstat(fileno(file), &statdata);
+
+    return (!err) ? statdata.st_size : -2;
+}
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
@@ -202,7 +210,7 @@ void tree_nodes_dot_init_recursively(FILE* dot_file, tree_node_t* tree_node_ptr,
 
         WRITE_DOT("style=filled, fillcolor=<yellow>, ");
     }
-    WRITE_DOT("label=<{ {%p} | {<b>%d</b>} | {%p} | { %p | %p} }>];\n", \
+    WRITE_DOT("label=<{ {%p} | {<b>" __TREE_TYPE_PERC__ "</b>} | {%p} | { %p | %p} }>];\n", \
              tree_node_ptr->parent, tree_node_ptr->value, tree_node_ptr, tree_node_ptr->left, tree_node_ptr->right);
 
     WRITE_DOT("\t{ rank=same; node_%p; L_%u };\n\n", tree_node_ptr, rank);
@@ -270,7 +278,7 @@ void tree_dump_in_png(tree_node_t* tree_root_ptr, const char* png_name, tree_nod
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------
-#define __TREE_TYPE_PERC__ "%d"
+
 #define WRITE(FORMAT, ...) fprintf(write_file, FORMAT, ##__VA_ARGS__)
 
 void tree_write_preorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV_DATA) {
@@ -342,4 +350,76 @@ void tree_write_postorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV
 
     WRITE(")");
 }
+
 #undef WRITE
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+tree_node_t* read_preorder(FILE* preorder_data PASS_PREV_DATA) {
+
+    ASSERT(preorder_data != NULL);
+
+    long long preorder_size = read_file_size(preorder_data);
+    ASSERT(preorder_size != -1);
+
+    char* source_data = (char*) calloc(preorder_size + 1, sizeof(char));
+    fread(source_data, sizeof(char), preorder_size, preorder_data);
+
+    tree_node_t* parsed_preorder_tree = parse_preorder(source_data PASS_CURRENT_LOCATION);
+    WARNING(parsed_preorder_tree != NULL);
+
+    free(source_data);
+
+    return parsed_preorder_tree;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------
+#define __TREE_TYPE_INIT__ 0
+tree_node_t* parse_preorder(char* preorder_data PASS_PREV_DATA) {
+
+    ASSERT(preorder_data != NULL);
+    // -----recurs
+    // read char, shift(1) if "("
+    // node* node_ptr = NULL;
+    // if char == "(": {
+    //      node_ptr = calloc(tree_node_t)
+    //      val = scanf("")
+    //      shift(scanfed)
+    //      node_ptr->val = val;
+    //      node_ptr->left = recurs
+    //      node_ptr->right = recurs
+    //      shift(")")
+    // }
+    //
+    // return node_ptr
+    // -----
+
+    char current_char = *preorder_data;
+
+    tree_node_t* current_tree_node = NULL;
+
+    if (current_char == '(') {
+
+        preorder_data++;
+
+        current_tree_node = (tree_node_t*) calloc(1, sizeof(tree_node_t));
+
+        tree_node_elem_t value = __TREE_TYPE_INIT__;
+        int nread = 1;
+        $d(value);
+        $s(preorder_data);
+        sscanf(preorder_data, "\" %d%n[^\"] ", &value, &nread);
+        $d(value);
+        $d(nread);
+        preorder_data += nread + 1;
+
+        current_tree_node->value = value;
+        $s(preorder_data);
+        current_tree_node->left = parse_preorder(preorder_data PASS_CURRENT_LOCATION); //SUDA: if left != NULL: left->parent = current
+        current_tree_node->right = parse_preorder(preorder_data PASS_CURRENT_LOCATION);
+
+        preorder_data++; //VOT SUDA PROVERKA NA ")"
+    }
+
+    return current_tree_node;
+}
