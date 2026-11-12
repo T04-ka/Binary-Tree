@@ -116,7 +116,7 @@ unsigned tree_depth_search(tree_node_t* tree_node_ptr, unsigned current_rank PAS
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file, const char* png_name PASS_PREV_DATA) {
+void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file, const char* png_name, tree_node_t* highlighted_node_ptr PASS_PREV_DATA) {
 
     ASSERT(tree_root_ptr != NULL);
     WARNING(tree_root_ptr->parent == NULL);
@@ -130,11 +130,11 @@ void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file, const char* 
     fprintf(html_file, "<body>\n");
     fprintf(html_file, "    <p style=\"font-family: monospace;\">\n        ");
 
-    tree_dump_in_png(tree_root_ptr, png_name PASS_CURRENT_LOCATION);
+    tree_dump_in_png(tree_root_ptr, png_name, highlighted_node_ptr PASS_CURRENT_LOCATION);
 
     fprintf(html_file, " DED_LOH\n");
     fprintf(html_file, "    < -- Image insert -- >\n");
-    fprintf(html_file, "    <img src=\"dump4html.png\" alt=\"graph.png\" style=\"max-width: 100%%; height: auto;\"><br>\n");
+    fprintf(html_file, "    <img src=\"%s\" alt=\"graph.png\" style=\"max-width: 100%%; height: auto;\"><br>\n", png_name);
 
     fprintf(html_file, "\n    </p>\n");
     fprintf(html_file, "</body>\n");
@@ -146,7 +146,7 @@ void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file, const char* 
 //---------------------------------------------------------------------------------------------------------------------------------
 
 void tree_nodes_dot_link_recursively(FILE* dot_file, tree_node_t* tree_node_ptr PASS_PREV_DATA);
-void tree_nodes_dot_init_recursively(FILE* dot_file, tree_node_t* tree_node_ptr, unsigned rank PASS_PREV_DATA);
+void tree_nodes_dot_init_recursively(FILE* dot_file, tree_node_t* tree_node_ptr, unsigned rank, tree_node_t* highlighted_node_ptr PASS_PREV_DATA);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
@@ -154,7 +154,7 @@ void tree_nodes_dot_init_recursively(FILE* dot_file, tree_node_t* tree_node_ptr,
 
 #define WRITE_DOT(FORMAT, ...) fprintf(dot_file, FORMAT, ##__VA_ARGS__)
 
-void tree_dump_dot_file_generate(tree_node_t* tree_root_ptr, const char* dot_file_name PASS_PREV_DATA) {
+void tree_dump_dot_file_generate(tree_node_t* tree_root_ptr, const char* dot_file_name, tree_node_t* highlighted_node_ptr PASS_PREV_DATA) {
 
     ASSERT(tree_root_ptr != NULL);
     WARNING(tree_root_ptr->parent == NULL);
@@ -179,7 +179,7 @@ void tree_dump_dot_file_generate(tree_node_t* tree_root_ptr, const char* dot_fil
 
     WRITE_DOT("[style=invis];\n\t}\n\n");
 
-    tree_nodes_dot_init_recursively(dot_file, tree_root_ptr, 0 PASS_CURRENT_LOCATION);
+    tree_nodes_dot_init_recursively(dot_file, tree_root_ptr, 0, highlighted_node_ptr PASS_CURRENT_LOCATION);
 
     tree_nodes_dot_link_recursively(dot_file, tree_root_ptr PASS_CURRENT_LOCATION);
 
@@ -192,24 +192,29 @@ void tree_dump_dot_file_generate(tree_node_t* tree_root_ptr, const char* dot_fil
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_nodes_dot_init_recursively(FILE* dot_file, tree_node_t* tree_node_ptr, unsigned rank PASS_PREV_DATA) {
+void tree_nodes_dot_init_recursively(FILE* dot_file, tree_node_t* tree_node_ptr, unsigned rank, tree_node_t* highlighted_node_ptr PASS_PREV_DATA) {
 
     ASSERT(tree_node_ptr != NULL);
 
 // TODO ВОТ ЗДЕСЬ                 v ПОПРОБОВАТЬ СДЕЛАТЬ ВСТАВКУ МАКРОСОМ, КОТОРЫЙ В ЗАВИСИМОСИ ОТ ТАЙПДЕФА РАСКРЫВАЕТСЯ В d p lg и тд
-    WRITE_DOT("\tnode_%p[label=<{ {%p} | {<b>%d</b>} | {%p} | { %p | %p} }>];\n", tree_node_ptr, \
+    WRITE_DOT("\tnode_%p[", tree_node_ptr);
+    if (tree_node_ptr == highlighted_node_ptr) {
+
+        WRITE_DOT("style=filled, fillcolor=<yellow>, ");
+    }
+    WRITE_DOT("label=<{ {%p} | {<b>%d</b>} | {%p} | { %p | %p} }>];\n", \
              tree_node_ptr->parent, tree_node_ptr->value, tree_node_ptr, tree_node_ptr->left, tree_node_ptr->right);
 
     WRITE_DOT("\t{ rank=same; node_%p; L_%u };\n\n", tree_node_ptr, rank);
 
     if (tree_node_ptr->left != NULL) {
 
-        tree_nodes_dot_init_recursively(dot_file, tree_node_ptr->left, rank + 1 PASS_CURRENT_LOCATION);
+        tree_nodes_dot_init_recursively(dot_file, tree_node_ptr->left, rank + 1, highlighted_node_ptr PASS_CURRENT_LOCATION);
     }
 
     if (tree_node_ptr->right != NULL) {
 
-        tree_nodes_dot_init_recursively(dot_file, tree_node_ptr->right, rank + 1 PASS_CURRENT_LOCATION);
+        tree_nodes_dot_init_recursively(dot_file, tree_node_ptr->right, rank + 1, highlighted_node_ptr PASS_CURRENT_LOCATION);
     }
 }
 
@@ -238,13 +243,13 @@ void tree_nodes_dot_link_recursively(FILE* dot_file, tree_node_t* tree_node_ptr 
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_dump_in_png(tree_node_t* tree_root_ptr, const char* png_name PASS_PREV_DATA) {
+void tree_dump_in_png(tree_node_t* tree_root_ptr, const char* png_name, tree_node_t* highlighted_node_ptr PASS_PREV_DATA) {
 
     ASSERT(tree_root_ptr != NULL);
 
     FILE* png_f = fopen(png_name, "w");
 
-    tree_dump_dot_file_generate(tree_root_ptr, "yashapidor.dot" PASS_CURRENT_LOCATION);
+    tree_dump_dot_file_generate(tree_root_ptr, "yashapidor.dot", highlighted_node_ptr PASS_CURRENT_LOCATION);
 
     char system_command[MAX_FILENAME_LEN * 2] = "dot -Tpng yashapidor.dot -o ";
     strncat(system_command, png_name, MAX_FILENAME_LEN);
@@ -265,3 +270,51 @@ void tree_dump_in_png(tree_node_t* tree_root_ptr, const char* png_name PASS_PREV
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------
+#define __TREE_TYPE_PERC__ "%d"
+#define WRITE(FORMAT, ...) fprintf(write_file, FORMAT, ##__VA_ARGS__)
+
+void tree_write_preorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV_DATA) {
+
+    ASSERT(tree_node_ptr != NULL);
+
+    WRITE("(");
+
+    WRITE("\"" __TREE_TYPE_PERC__ "\"", tree_node_ptr->value);
+
+    if (tree_node_ptr->left != NULL) {
+
+        tree_write_preorder(write_file, tree_node_ptr->left PASS_CURRENT_LOCATION);
+    }
+
+    if (tree_node_ptr->right != NULL) {
+
+        tree_write_preorder(write_file, tree_node_ptr->right PASS_CURRENT_LOCATION);
+    }
+
+    WRITE(")");
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+void tree_write_inorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV_DATA) {
+
+    ASSERT(tree_node_ptr != NULL);
+
+    WRITE("(");
+
+    WRITE("\"" __TREE_TYPE_PERC__ "\"", tree_node_ptr->value);
+
+    if (tree_node_ptr->left != NULL) {
+
+        tree_write_preorder(write_file, tree_node_ptr->left PASS_CURRENT_LOCATION);
+    }
+
+    if (tree_node_ptr->right != NULL) {
+
+        tree_write_preorder(write_file, tree_node_ptr->right PASS_CURRENT_LOCATION);
+    }
+
+    WRITE(")");
+}
+
+#undef WRITE

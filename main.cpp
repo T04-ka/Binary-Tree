@@ -23,20 +23,31 @@ int main(){
     tree_node_link(NODES[2], NODES[5], TREE_NODE_SIDE_LEFT PASS_CURRENT_LOCATION);
     tree_node_link(NODES[2], NODES[6], TREE_NODE_SIDE_RIGHT PASS_CURRENT_LOCATION);
 
-    unsigned depth = tree_depth_search(NODES[0], 0 PASS_CURRENT_LOCATION);
+//     unsigned depth = tree_depth_search(NODES[0], 0 PASS_CURRENT_LOCATION);
+//
+//     $du(depth);
+//
+//     tree_dump_dot_file_generate(NODES[0], "hui.dot", NODES[1] PASS_CURRENT_LOCATION);
+//
+//     FILE* html_file = fopen("tree_dump.html", "w");
+//
+//     tree_dump_in_html(NODES[0], html_file, "1", NODES[2] PASS_CURRENT_LOCATION);
+//
+//     fclose(html_file);
+//
+//
 
-    $du(depth);
+    FILE* preorder = fopen("preorder.txt", "w");
 
-    FILE* html_file = fopen("tree_dump.html", "w");
+    tree_write_preorder(preorder, NODES[0] PASS_CURRENT_LOCATION);
 
-    tree_dump_in_html(NODES[0], html_file PASS_CURRENT_LOCATION);
-
-    fclose(html_file);
-
+    fclose(preorder);
     // tree_dump_dot_file_generate(NODES[0], "hui.dot" PASS_CURRENT_LOCATION);
     // tree_dump_in_png(NODES[0], "hui.png" PASS_CURRENT_LOCATION);
 
     tree_node_destroy(NODES[0], true PASS_CURRENT_LOCATION);
+
+
 
     return 0;
 }

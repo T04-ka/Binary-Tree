@@ -59,15 +59,19 @@ unsigned tree_depth_search(tree_node_t* tree_node_ptr, unsigned current_rank PAS
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file PASS_PREV_DATA);
+void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file, const char* png_name, tree_node_t* highlighted_node_ptr PASS_PREV_DATA);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_dump_dot_file_generate(tree_node_t* tree_root_ptr, const char* dot_file_name PASS_PREV_DATA);
+void tree_dump_dot_file_generate(tree_node_t* tree_root_ptr, const char* dot_file_name, tree_node_t* highlighted_node_ptr PASS_PREV_DATA);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_dump_in_png(tree_node_t* tree_root_ptr, const char* png_name PASS_PREV_DATA);
+void tree_dump_in_png(tree_node_t* tree_root_ptr, const char* png_name, tree_node_t* highlighted_node_ptr PASS_PREV_DATA);
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+void tree_write_preorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV_DATA);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
