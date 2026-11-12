@@ -11,7 +11,8 @@
 typedef int tree_node_elem_t;
 #endif
 
-#define __TREE_TYPE_PERC__ "%d"
+#define __TREE_TYPE_READ_PERC__ "%d"
+#define __TREE_TYPE_WRITE_PERC__ "%d"
 #define __TREE_TYPE_INIT__ 0
 
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -95,7 +96,7 @@ void tree_write_postorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-tree_node_t* parse_preorder(char* source_data PASS_PREV_DATA);
+tree_node_t* parse_preorder(char** source_data_ptr PASS_PREV_DATA);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
@@ -103,7 +104,11 @@ tree_node_t* read_tree(FILE* preorder_data, tree_read_t read_t PASS_PREV_DATA);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-tree_node_t* parse_inorder(char* inorder_data PASS_PREV_DATA);
+tree_node_t* parse_inorder(char** inorder_data_ptr PASS_PREV_DATA);
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+tree_node_t* parse_postorder(char** inorder_data_ptr PASS_PREV_DATA);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
