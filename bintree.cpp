@@ -21,11 +21,24 @@ tree_node_t* tree_node_create(tree_node_elem_t value) {
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_node_destroy(tree_node_t* node_ptr PASS_PREV_DATA) {
+void tree_node_destroy(tree_node_t* tree_node_ptr, bool do_recursively PASS_PREV_DATA) {
 
-    ASSERT(node_ptr != NULL);
+    ASSERT(tree_node_ptr != NULL);
 
-    free(node_ptr);
+    if (do_recursively) {
+
+        if (tree_node_ptr->left != NULL) {
+
+            tree_node_destroy(tree_node_ptr->left, true PASS_CURRENT_LOCATION);
+        }
+
+        if (tree_node_ptr->right != NULL) {
+
+            tree_node_destroy(tree_node_ptr->right, true PASS_CURRENT_LOCATION);
+        }
+    }
+
+    free(tree_node_ptr);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------

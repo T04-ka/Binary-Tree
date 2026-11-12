@@ -39,7 +39,7 @@ tree_node_t* tree_node_create(tree_node_elem_t value);
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-void tree_node_destroy(tree_node_t* tree_node_ptr ONDEBUG(, const char*, int, const char*));
+void tree_node_destroy(tree_node_t* tree_node_ptr, bool do_recursively ONDEBUG(, const char*, int, const char*));
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
