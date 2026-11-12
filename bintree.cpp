@@ -105,6 +105,9 @@ unsigned tree_depth_search(tree_node_t* tree_node_ptr, unsigned current_rank PAS
 
 void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file PASS_PREV_DATA) {
 
+    ASSERT(tree_root_ptr != NULL);
+    WARNING(tree_root_ptr->parent == NULL);
+
     fprintf(html_file, "<!DOCTYPE html>\n");
     fprintf(html_file, "<html>\n");
     fprintf(html_file, "<head>\n");
@@ -117,24 +120,108 @@ void tree_dump_in_html(tree_node_t* tree_root_ptr, FILE* html_file PASS_PREV_DAT
     tree_dump_in_png(tree_root_ptr, "dump4html.png" PASS_CURRENT_LOCATION);
 
     fprintf(html_file, " DED_LOH\n");
-    fprintf(html_file, "    < -- Image insert -->\n");
+    fprintf(html_file, "    < -- Image insert -- >\n");
     fprintf(html_file, "    <img src=\"dump4html.png\" alt=\"graph.png\" style=\"max-width: 100%%; height: auto;\"><br>\n");
 
     fprintf(html_file, "\n    </p>\n");
     fprintf(html_file, "</body>\n");
     fprintf(html_file, "</html>\n");
 
-    printf("HTML dump was writed succesfully.\n");
-
-    return 0;
+    printf("HTML dump has written succesfully.\n");
 }
 
+//---------------------------------------------------------------------------------------------------------------------------------
+
+void tree_nodes_dot_link_recursively(FILE* dot_file, tree_node_t* tree_node_ptr PASS_PREV_DATA);
+void tree_nodes_dot_init_recursively(FILE* dot_file, tree_node_t* tree_node_ptr, unsigned rank PASS_PREV_DATA);
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
 // TODO: сделать подкраску указываемых индексов
+
+#define WRITE_DOT(FORMAT, ...) fprintf(dot_file, FORMAT, ##__VA_ARGS__)
+
 void tree_dump_dot_file_generate(tree_node_t* tree_root_ptr, const char* dot_file_name PASS_PREV_DATA) {
+
+    ASSERT(tree_root_ptr != NULL);
+    WARNING(tree_root_ptr->parent == NULL);
 
     unsigned depth = tree_depth_search(tree_root_ptr, 0 PASS_CURRENT_LOCATION);
 
+    FILE* dot_file = fopen(dot_file_name, "w");
+
+    WRITE_DOT("digraph G {\n\trankdir=TB\n\tnodesep=0.4\n\tranksep=0.4;\n\tsplines=true;\n\n\tnode [shape=circle, style=filled, fillcolor=\"#F4F4F4\", width=0.5, fixedsize=true, fontname=\"Arial\"];\
+        \n\n\tsubgraph levels {\n\t\tnode [shape=plaintext, width=0.8, style=filled, fillcolor=none, fontname=\"Arial\", fontcolor=\"#777777\"];\n\n");
+
+    for (unsigned i = 0; i <= depth; i++) {
+
+        WRITE_DOT("\t\tL_%u [label=\"%u\"];\n", i, i);
+    }
+
+    WRITE_DOT("\n\t\tL_0 ");
+    for (unsigned i = 1; i <= depth; i++) {
+
+        WRITE_DOT("-> L_%u ", i);
+    }
+
+    WRITE_DOT("[style=invis];\n\t}\n\n");
+
+    tree_nodes_dot_init_recursively(dot_file, tree_root_ptr, 0 PASS_CURRENT_LOCATION);
+
+    tree_nodes_dot_link_recursively(dot_file, tree_root_ptr PASS_CURRENT_LOCATION);
+
+    WRITE_DOT("}\n");
+
+    fclose(dot_file);
+
+    printf("DOT file \"%s\" was created succeffully.\n", dot_file_name);
 }
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+void tree_nodes_dot_init_recursively(FILE* dot_file, tree_node_t* tree_node_ptr, unsigned rank PASS_PREV_DATA) {
+
+    ASSERT(tree_node_ptr != NULL);
+
+// TODO ВОТ ЗДЕСЬ                 v ПОПРОБОВАТЬ СДЕЛАТЬ ВСТАВКУ МАКРОСОМ, КОТОРЫЙ В ЗАВИСИМОСИ ОТ ТАЙПДЕФА РАСКРЫВАЕТСЯ В d p lg и тд
+    WRITE_DOT("\tnode_%p[label=\"%d\"];\n", tree_node_ptr, tree_node_ptr->value);
+    WRITE_DOT("\t{ rank=same; node_%p; L_%u };\n\n", tree_node_ptr, rank);
+
+    if (tree_node_ptr->left != NULL) {
+
+        tree_nodes_dot_init_recursively(dot_file, tree_node_ptr->left, rank + 1 PASS_CURRENT_LOCATION);
+    }
+
+    if (tree_node_ptr->right != NULL) {
+
+        tree_nodes_dot_init_recursively(dot_file, tree_node_ptr->right, rank + 1 PASS_CURRENT_LOCATION);
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+void tree_nodes_dot_link_recursively(FILE* dot_file, tree_node_t* tree_node_ptr PASS_PREV_DATA) {
+
+    ASSERT(tree_node_ptr != NULL);
+
+    if (tree_node_ptr->left != NULL) {
+
+        WRITE_DOT("\tnode_%p -> node_%p;\n", tree_node_ptr, tree_node_ptr->left);
+        tree_nodes_dot_link_recursively(dot_file, tree_node_ptr->left PASS_CURRENT_LOCATION);
+    }
+
+    if (tree_node_ptr->right != NULL) {
+
+        WRITE_DOT("\tnode_%p -> node_%p;\n", tree_node_ptr, tree_node_ptr->right);
+        tree_nodes_dot_link_recursively(dot_file, tree_node_ptr->right PASS_CURRENT_LOCATION);
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+#undef WRITE_DOT
+
+//---------------------------------------------------------------------------------------------------------------------------------
 
 void tree_dump_in_png(tree_node_t* tree_root_ptr, const char* png_name PASS_PREV_DATA) {
 
@@ -157,7 +244,9 @@ void tree_dump_in_png(tree_node_t* tree_root_ptr, const char* png_name PASS_PREV
         return;
     }
 
-    printf("PNG dump was created successfully.\n");
+    printf("PNG dump \"%s\" was created successfully.\n", png_name);
 
     return;
 }
+
+//---------------------------------------------------------------------------------------------------------------------------------

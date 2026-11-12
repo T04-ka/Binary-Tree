@@ -1,0 +1,29 @@
+digraph G {
+	rankdir=TB
+	nodesep=0.4
+	ranksep=0.4;
+	splines=true;
+
+	node [shape=circle, style=filled, fillcolor="#F4F4F4", width=0.5, fixedsize=true, fontname="Arial"];        
+
+	subgraph levels {
+		node [shape=plaintext, width=0.8, style=filled, fillcolor=none, fontname="Arial", fontcolor="#777777"];
+
+		L_0 [label="0"];
+		L_1 [label="1"];
+
+		L_0 -> L_1 [style=invis];
+	}
+
+	node_0x76d76a7e0040[label="50"];
+	{ rank=same; node_0x76d76a7e0040; L_0 };
+
+	node_0x76d76a7e0070[label="100"];
+	{ rank=same; node_0x76d76a7e0070; L_1 };
+
+	node_0x76d76a7e00a0[label="25"];
+	{ rank=same; node_0x76d76a7e00a0; L_1 };
+
+	node_0x76d76a7e0040 -> node_0x76d76a7e0070;
+	node_0x76d76a7e0040 -> node_0x76d76a7e00a0;
+}

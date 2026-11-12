@@ -13,28 +13,29 @@ digraph G {
         L_0 [label="0"];
         L_1 [label="1"];
         L_2 [label="2"];
-        L_3 [label="3"];
 
-        L_0 -> L_1 -> L_2 -> L_3 [style=invis];
+        L_0 -> L_1 -> L_2 [style=invis];
     }
 
-    Root [fillcolor="cyan"];
+    node_0x1488 [label="3"];
+    { rank=same; node_0x1488; L_0 };
 
-    Root -> A1;
-    Root -> A2;
+    node_0x1111[label="4"];
+    { rank=same; node_0x1111; L_1 };
 
-    A1 -> B1;
-    A1 -> B2;
-    A2 -> B3;
-    A2 -> B4;
+    node_0x6769[label="5"];
+    { rank=same; node_0x6769; L_1 };
 
-    B1 -> C1; B1 -> C2;
-    B2 -> C3; B2 -> C4;
-    B3 -> C5; B3 -> C6;
-    B4 -> C7; B4 -> C8;
+    node_0x2280[label="6"];
+    { rank=same; node_0x2280; L_2 };
 
-    { rank=same; L_0; Root; }
-    { rank=same; L_1; A1; A2; }
-    { rank=same; L_2; B1; B2; B3; B4; }
-    { rank=same; L_3; C1; C2; C3; C4; C5; C6; C7; C8; }
+    node_0x5242[label="7"];
+    { rank=same; node_0x5242; L_2 };
+
+
+    node_0x1488 -> node_0x1111;
+    node_0x1488 -> node_0x6769;
+
+    node_0x6769 -> node_0x2280;
+    node_0x6769 -> node_0x5242;
 }
