@@ -37,11 +37,11 @@ int main(){
 //
 //
 
-    FILE* preorder = fopen("preorder.txt", "w");
+    FILE* f = fopen("postorder.txt", "w");
 
-    tree_write_preorder(preorder, NODES[0] PASS_CURRENT_LOCATION);
+    tree_write_postorder(f, NODES[0] PASS_CURRENT_LOCATION);
 
-    fclose(preorder);
+    fclose(f);
     // tree_dump_dot_file_generate(NODES[0], "hui.dot" PASS_CURRENT_LOCATION);
     // tree_dump_in_png(NODES[0], "hui.png" PASS_CURRENT_LOCATION);
 

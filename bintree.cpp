@@ -275,6 +275,7 @@ void tree_dump_in_png(tree_node_t* tree_root_ptr, const char* png_name, tree_nod
 
 void tree_write_preorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV_DATA) {
 
+    ASSERT(write_file != NULL);
     ASSERT(tree_node_ptr != NULL);
 
     WRITE("(");
@@ -298,23 +299,47 @@ void tree_write_preorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV_
 
 void tree_write_inorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV_DATA) {
 
+    ASSERT(write_file != NULL);
     ASSERT(tree_node_ptr != NULL);
 
     WRITE("(");
 
-    WRITE("\"" __TREE_TYPE_PERC__ "\"", tree_node_ptr->value);
-
     if (tree_node_ptr->left != NULL) {
 
-        tree_write_preorder(write_file, tree_node_ptr->left PASS_CURRENT_LOCATION);
+        tree_write_inorder(write_file, tree_node_ptr->left PASS_CURRENT_LOCATION);
     }
+
+    WRITE("\"" __TREE_TYPE_PERC__ "\"", tree_node_ptr->value);
 
     if (tree_node_ptr->right != NULL) {
 
-        tree_write_preorder(write_file, tree_node_ptr->right PASS_CURRENT_LOCATION);
+        tree_write_inorder(write_file, tree_node_ptr->right PASS_CURRENT_LOCATION);
     }
 
     WRITE(")");
 }
 
+//---------------------------------------------------------------------------------------------------------------------------------
+
+void tree_write_postorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV_DATA) {
+
+    ASSERT(write_file != NULL);
+    ASSERT(tree_node_ptr != NULL);
+
+    WRITE("(");
+
+    if (tree_node_ptr->left != NULL) {
+
+        tree_write_postorder(write_file, tree_node_ptr->left PASS_CURRENT_LOCATION);
+    }
+
+    if (tree_node_ptr->right != NULL) {
+
+        tree_write_postorder(write_file, tree_node_ptr->right PASS_CURRENT_LOCATION);
+    }
+
+    WRITE("\"" __TREE_TYPE_PERC__ "\"", tree_node_ptr->value);
+
+    WRITE(")");
+}
 #undef WRITE

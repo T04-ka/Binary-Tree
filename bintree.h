@@ -75,4 +75,12 @@ void tree_write_preorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV_
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
+void tree_write_inorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV_DATA);
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+void tree_write_postorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV_DATA);
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
 #endif
