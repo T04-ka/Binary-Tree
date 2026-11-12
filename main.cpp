@@ -1,5 +1,5 @@
 
-#include "bintree.h"
+#include "src/bintree.h"
 #define DEBUG
 
 
