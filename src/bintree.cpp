@@ -429,7 +429,7 @@ tree_node_t* parse_preorder(char* preorder_data PASS_PREV_DATA) {
 
         tree_node_elem_t value = __TREE_TYPE_INIT__;
         int nread = 1;
-        sscanf(preorder_data, "\" %d%n[^\"] ", &value, &nread);
+        sscanf(preorder_data, "\"" __TREE_TYPE_PERC__ "%n[^\"] ", &value, &nread);
         preorder_data += nread + 1;
         current_tree_node->value = value;
 
@@ -498,7 +498,7 @@ tree_node_t* parse_inorder(char* inorder_data PASS_PREV_DATA) {
 
         tree_node_elem_t value = __TREE_TYPE_INIT__;
         int nread = 1;
-        sscanf(inorder_data, "\" %d%n[^\"] ", &value, &nread);
+        sscanf(inorder_data, "\"" __TREE_TYPE_PERC__ "%n[^\"] ", &value, &nread);
         inorder_data += nread + 1;
         current_tree_node->value = value;
 
