@@ -5,7 +5,7 @@
 
 int main(){
 
-    tree_node_t* NODES[10] = {};
+    // tree_node_t* NODES[10] = {};
 //
 //     NODES[0] = tree_node_create(50);
 //     NODES[1] = tree_node_create(100);
@@ -38,7 +38,7 @@ int main(){
     FILE* html_file = fopen("tree_dump.html", "w");
     // tree_write_postorder(f, NODES[0] PASS_CURRENT_LOCATION);
 
-    tree_node_t* tree_ptr = read_preorder(f PASS_CURRENT_LOCATION);
+    tree_node_t* tree_ptr = read_tree(f, TREE_PREORDER PASS_CURRENT_LOCATION);
 
     tree_dump_in_html(tree_ptr, html_file, "1.png", tree_ptr PASS_CURRENT_LOCATION);
     fclose(html_file);

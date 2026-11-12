@@ -355,26 +355,49 @@ void tree_write_postorder(FILE* write_file, tree_node_t* tree_node_ptr PASS_PREV
 
 //---------------------------------------------------------------------------------------------------------------------------------
 
-tree_node_t* read_preorder(FILE* preorder_data PASS_PREV_DATA) {
+tree_node_t* read_tree(FILE* readfrom_data, tree_read_t read_t PASS_PREV_DATA) {
 
-    ASSERT(preorder_data != NULL);
+    ASSERT(readfrom_data != NULL);
 
-    long long preorder_size = read_file_size(preorder_data);
-    ASSERT(preorder_size != -1);
+    long long readfrom_data_size = read_file_size(readfrom_data);
+    ASSERT(readfrom_data_size != -1);
 
-    char* source_data = (char*) calloc(preorder_size + 1, sizeof(char));
-    fread(source_data, sizeof(char), preorder_size, preorder_data);
+    char* source_data = (char*) calloc((size_t) readfrom_data_size + 1, sizeof(char));
+    fread(source_data, sizeof(char), (size_t) readfrom_data_size, readfrom_data);
 
-    tree_node_t* parsed_preorder_tree = parse_preorder(source_data PASS_CURRENT_LOCATION);
-    WARNING(parsed_preorder_tree != NULL);
+    tree_node_t* read_tree = __TREE_TYPE_INIT__;
+
+    switch (read_t) {
+
+        case TREE_PREORDER:
+        {
+            read_tree = parse_preorder(source_data PASS_CURRENT_LOCATION);
+            break;
+        };
+
+        case TREE_INORDER:
+        {
+            read_tree = parse_inorder(source_data PASS_CURRENT_LOCATION);
+            break;
+        }
+
+        case TREE_POSTORDER:
+        {
+            break;
+        }
+
+        default: {}
+    }
+
+    WARNING(read_tree != NULL);
 
     free(source_data);
 
-    return parsed_preorder_tree;
+    return read_tree;
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------
-#define __TREE_TYPE_INIT__ 0
+
 tree_node_t* parse_preorder(char* preorder_data PASS_PREV_DATA) {
 
     ASSERT(preorder_data != NULL);
@@ -406,19 +429,87 @@ tree_node_t* parse_preorder(char* preorder_data PASS_PREV_DATA) {
 
         tree_node_elem_t value = __TREE_TYPE_INIT__;
         int nread = 1;
-        $d(value);
-        $s(preorder_data);
         sscanf(preorder_data, "\" %d%n[^\"] ", &value, &nread);
-        $d(value);
-        $d(nread);
         preorder_data += nread + 1;
-
         current_tree_node->value = value;
-        $s(preorder_data);
-        current_tree_node->left = parse_preorder(preorder_data PASS_CURRENT_LOCATION); //SUDA: if left != NULL: left->parent = current
-        current_tree_node->right = parse_preorder(preorder_data PASS_CURRENT_LOCATION);
 
+        current_tree_node->left = parse_preorder(preorder_data PASS_CURRENT_LOCATION); //SUDA: if left != NULL: left->parent = current
+        if (current_tree_node->left != NULL) {
+
+            current_tree_node->left->parent = current_tree_node;
+        }
+
+        current_tree_node->right = parse_preorder(preorder_data PASS_CURRENT_LOCATION);
+        if (current_tree_node->right != NULL) {
+
+            current_tree_node->right->parent = current_tree_node;
+        }
         preorder_data++; //VOT SUDA PROVERKA NA ")"
+    }
+
+    return current_tree_node;
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------
+
+tree_node_t* parse_inorder(char* inorder_data PASS_PREV_DATA) {
+
+    //NE RABOTAET BLYA
+
+    ASSERT(inorder_data != NULL);
+    // -----recurs
+    // read char, shift(1) if "("
+    // node* node_ptr = NULL;
+    // if char == "(": {
+    //      node_ptr = calloc(tree_node_t)
+    //      node_ptr->left = recurs
+    //
+    //      val = scanf("")
+    //      shift(scanfed)
+    //      node_ptr->val = val;
+    //
+    //      node_ptr->right = recurs
+    //
+    //      shift(")")
+    // }
+    //
+    // return node_ptr
+    // -----
+
+    char current_char = *inorder_data;
+
+    tree_node_t* current_tree_node = NULL;
+
+    if (current_char == '(') {
+
+        $std("==================\n")
+        $s(inorder_data);
+        inorder_data++;
+
+        current_tree_node = (tree_node_t*) calloc(1, sizeof(tree_node_t));
+
+        current_tree_node->left = parse_inorder(inorder_data PASS_CURRENT_LOCATION); //SUDA: if left != NULL: left->parent = current
+        if (current_tree_node->left != NULL) {
+
+            current_tree_node->left->parent = current_tree_node;
+        }
+
+        $s(inorder_data);
+
+        tree_node_elem_t value = __TREE_TYPE_INIT__;
+        int nread = 1;
+        sscanf(inorder_data, "\" %d%n[^\"] ", &value, &nread);
+        inorder_data += nread + 1;
+        current_tree_node->value = value;
+
+        $s(inorder_data);
+        current_tree_node->right = parse_inorder(inorder_data PASS_CURRENT_LOCATION);
+        if (current_tree_node->right != NULL) {
+
+            current_tree_node->right->parent = current_tree_node;
+        }
+
+        inorder_data++; //VOT SUDA PROVERKA NA ")"
     }
 
     return current_tree_node;
